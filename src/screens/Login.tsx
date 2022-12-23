@@ -1,9 +1,29 @@
+import { useState } from "react";
+import supabase from "../supabase";
 import { Button } from "../ui/Button";
 import { Center } from "../ui/Center";
 import { Input } from "../ui/Input";
 import { VStack } from "../ui/VStack";
 
+interface LoginForm {
+  email: string;
+  password: string;
+}
+
 export function Login() {
+  const [form, setForm] = useState<LoginForm>({ email: "", password: "" });
+
+  function onChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  }
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const { data, error } = await supabase.auth.signInWithPassword(form);
+    console.log({ data, error });
+  }
+
   return (
     <Center className="h-full">
       <div>
@@ -13,13 +33,30 @@ export function Login() {
             <p>Login</p>
           </div>
 
-          <form onSubmit={() => {}}>
+          <form onSubmit={onSubmit}>
             <VStack className="gap-3">
-              <Input className="w-72" type="email" placeholder="E-Mail" />
-              <Input className="w-72" type="password" placeholder="Password" />
+              <Input
+                className="w-72"
+                type="email"
+                placeholder="E-Mail"
+                value={form.email}
+                name="email"
+                autoComplete="off"
+                onChange={onChange}
+              />
+              <Input
+                className="w-72"
+                type="password"
+                placeholder="Password"
+                value={form.password}
+                name="password"
+                onChange={onChange}
+              />
             </VStack>
 
-            <Button type="submit">Login</Button>
+            <Button className="w-full mt-5 py-2" type="submit">
+              Login
+            </Button>
           </form>
         </VStack>
       </div>

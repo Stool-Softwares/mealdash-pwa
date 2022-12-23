@@ -1,3 +1,6 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import supabase from "../supabase";
 import { Center } from "../ui/Center";
 import { VStack } from "../ui/VStack";
 
@@ -26,6 +29,23 @@ export function Spinner() {
 }
 
 export function Loading() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function aE() {
+      const session = await supabase.auth.getSession();
+      console.log(session);
+
+      if (!session.data.session) {
+        navigate("/login");
+      } else {
+        navigate("/home");
+      }
+    }
+
+    aE();
+  }, []);
+
   return (
     <Center className="h-full">
       <VStack className="items-center">
