@@ -9,7 +9,10 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-
-    <script></script>
+    <script>
+      if (navigator.virtualKeyboard) {
+        navigator.virtualKeyboard.overlaysContent = false;
+      }
+    </script>
   </body>
 </html>

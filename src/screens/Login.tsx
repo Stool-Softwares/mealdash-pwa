@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import supabase from "../supabase";
 import { Button } from "../ui/Button";
 import { Center } from "../ui/Center";
@@ -12,6 +13,7 @@ interface LoginForm {
 
 export function Login() {
   const [form, setForm] = useState<LoginForm>({ email: "", password: "" });
+  const navigate = useNavigate();
 
   function onChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
@@ -21,7 +23,13 @@ export function Login() {
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const { data, error } = await supabase.auth.signInWithPassword(form);
-    console.log({ data, error });
+    console.log({ login: "login", data, error });
+
+    if (data.session?.access_token) {
+      navigate("/home");
+    } else {
+      console.log("Unable to login");
+    }
   }
 
   return (
@@ -58,6 +66,16 @@ export function Login() {
               Login
             </Button>
           </form>
+
+          <p className="mt-3">
+            New to MealDash?{" "}
+            <span
+              className="text-blue-500"
+              onClick={() => navigate("/register")}
+            >
+              Register
+            </span>
+          </p>
         </VStack>
       </div>
     </Center>
