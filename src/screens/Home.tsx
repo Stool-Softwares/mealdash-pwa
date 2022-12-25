@@ -1,4 +1,7 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import supabase from "../supabase";
+import { Meal } from "../types";
 import { Button } from "../ui/Button";
 import { HStack } from "../ui/HStack";
 import { VStack } from "../ui/VStack";
@@ -27,6 +30,23 @@ export function Home() {
     { type: "SNA", content: "whatever", date: "29-08-2022" },
     { type: "DIN", content: "whatever", date: "29-08-2022" },
   ];
+
+  const [meals, setMeals] = useState<Array<Meal>>([]);
+
+  useEffect(() => {
+    async function getMeals() {
+      const mealsRes = await supabase
+        .from("meals")
+        .select()
+        .gte("mealDate", new Date("2022-12-25").toISOString())
+        .lte("mealDate", new Date("2022-12-27").toISOString());
+
+      setMeals(mealsRes.data || []);
+    }
+
+    getMeals();
+  }, []);
+
   return (
     <VStack className="px-5 py-5">
       <Header />
@@ -35,13 +55,13 @@ export function Home() {
         <h1 className="font-bold">Your Meals</h1>
       </VStack>
       <VStack>
-        {dummyData.map((item, i) => (
+        {meals.map((item, i) => (
           <div
             key={i}
             className="w-full border border-zinc-400 rounded-md px-3 py-3 mb-5"
           >
-            <h1 className="text-sm font-bold">{item.type}</h1>
-            <p className="text-sm">{item.content}</p>
+            <h1 className="text-sm font-bold">{item.mealType}</h1>
+            <p className="text-sm">{item.mealContent}</p>
             <p className="text-sm">Time: 1:00PM - 3:00PM</p>
             <Button className="w-full mt-3">Cancel Meal</Button>
           </div>

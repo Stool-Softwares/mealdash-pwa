@@ -25,11 +25,11 @@ export function Login() {
     const { data, error } = await supabase.auth.signInWithPassword(form);
     console.log({ login: "login", data, error });
 
-    if (data.session?.access_token) {
-      navigate("/home");
-    } else {
-      console.log("Unable to login");
-    }
+    // if (data.session?.access_token) {
+    //   navigate("/home");
+    // } else {
+    //   console.log("Unable to login");
+    // }
   }
 
   return (

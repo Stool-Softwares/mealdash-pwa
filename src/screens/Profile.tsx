@@ -1,10 +1,14 @@
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../hooks/useUser";
 import supabase from "../supabase";
+import { Button } from "../ui/Button";
 import { Flex } from "../ui/Flex";
 import { HStack } from "../ui/HStack";
 
 export function Profile() {
   const navigate = useNavigate();
+  const user = useUser();
+
   async function logout() {
     try {
       const res = await supabase.auth.signOut();
@@ -21,7 +25,11 @@ export function Profile() {
       <HStack className="mb-5">
         <div className="bg-gray-200 rounded-full w-24 h-24 flex items-center justify-center"></div>
       </HStack>
-      <p className="font-bold">Aditya Raj Kumawat</p>
+
+      <p className="font-bold mb-3">{user?.email}</p>
+
+      <Button>Edit Profile</Button>
+
       <HStack className="absolute bottom-5">
         <div className="w-screen px-5">
           <button

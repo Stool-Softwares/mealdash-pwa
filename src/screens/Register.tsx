@@ -34,16 +34,20 @@ export function Register() {
     const { data, error } = await supabase.auth.signUp(form);
     console.log({ data, error });
 
-    if (!data.session?.access_token) return;
+    // if (!data.session?.access_token) return;
 
-    // add the user to DB
-    const formDerivedValues = fp.pick(form, ["name", "type"]);
-    const userId = data.session.user.id;
-    const user = await supabase
-      .from("Users")
-      .insert({ userId, ...formDerivedValues });
+    // // add the user to DB
+    // const formDerivedValues = fp.pick(form, ["name", "type"]);
+    // const userId = data.session.user.id;
+    // const user = await supabase
+    //   .from("Users")
+    //   .insert({ userId, ...formDerivedValues });
 
-    console.log({ user });
+    // console.log({ user });
+
+    if (!data.session && data.user) {
+      navigate("/verify-email");
+    }
   }
 
   return (
