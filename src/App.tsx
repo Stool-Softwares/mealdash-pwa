@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { CreateUser } from "./screens/CreateUser";
 import { Home } from "./screens/Home";
 import { Loading } from "./screens/Loading";
 import { Login } from "./screens/Login";
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
   { path: "/home", element: <Home /> },
   { path: "/profile", element: <Profile /> },
   { path: "/verify-email", element: <VerifyEmail /> },
+  { path: "/create-user", element: <CreateUser /> },
 ]);
 
 const allowedRoutes = ["/login", "/register"];
@@ -39,6 +41,11 @@ function App() {
         }
         return;
       }
+
+      const user = await supabase
+        .from("users")
+        .select("*")
+        .filter("userId", "eq", userRes.data.user?.id);
 
       auth.setAuth(authRes.data.session, userRes.data.user);
       router.navigate("/home");

@@ -31,19 +31,13 @@ export function Register() {
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const { data, error } = await supabase.auth.signUp(form);
+    console.log({ form });
+
+    const { data, error } = await supabase.auth.signUp({
+      ...form,
+      options: { data: { type: "HOS" } },
+    });
     console.log({ data, error });
-
-    // if (!data.session?.access_token) return;
-
-    // // add the user to DB
-    // const formDerivedValues = fp.pick(form, ["name", "type"]);
-    // const userId = data.session.user.id;
-    // const user = await supabase
-    //   .from("Users")
-    //   .insert({ userId, ...formDerivedValues });
-
-    // console.log({ user });
 
     if (!data.session && data.user) {
       navigate("/verify-email");

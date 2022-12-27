@@ -24,13 +24,6 @@ function Header() {
 }
 
 export function Home() {
-  const dummyData = [
-    { type: "BRE", content: "whatever", date: "29-08-2022" },
-    { type: "LUN", content: "whatever", date: "29-08-2022" },
-    { type: "SNA", content: "whatever", date: "29-08-2022" },
-    { type: "DIN", content: "whatever", date: "29-08-2022" },
-  ];
-
   const [meals, setMeals] = useState<Array<Meal>>([]);
 
   useEffect(() => {
@@ -38,8 +31,8 @@ export function Home() {
       const mealsRes = await supabase
         .from("meals")
         .select()
-        .gte("mealDate", new Date("2022-12-25").toISOString())
-        .lte("mealDate", new Date("2022-12-27").toISOString());
+        .gte("mealDate", "2022-12-25")
+        .lte("mealDate", "2022-12-26");
 
       setMeals(mealsRes.data || []);
     }

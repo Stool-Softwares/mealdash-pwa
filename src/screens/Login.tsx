@@ -22,7 +22,12 @@ export function Login() {
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const { data, error } = await supabase.auth.signInWithPassword(form);
+    console.log({ form });
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      ...form,
+      options: { data: { type: "HOS" } },
+    });
     console.log({ login: "login", data, error });
 
     // if (data.session?.access_token) {
