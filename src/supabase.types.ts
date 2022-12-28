@@ -4,66 +4,86 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json }
-  | Json[];
+  | Json[]
 
 export interface Database {
   public: {
     Tables: {
       meals: {
         Row: {
-          createdAt: string | null;
-          mealContent: string | null;
-          mealType: string;
-          mealDate: string;
-        };
+          createdAt: string | null
+          mealContent: string | null
+          mealType: string
+          mealDate: string
+        }
         Insert: {
-          createdAt?: string | null;
-          mealContent?: string | null;
-          mealType: string;
-          mealDate: string;
-        };
+          createdAt?: string | null
+          mealContent?: string | null
+          mealType: string
+          mealDate: string
+        }
         Update: {
-          createdAt?: string | null;
-          mealContent?: string | null;
-          mealType?: string;
-          mealDate?: string;
-        };
-      };
+          createdAt?: string | null
+          mealContent?: string | null
+          mealType?: string
+          mealDate?: string
+        }
+      }
+      mealsStatus: {
+        Row: {
+          id: string
+          createdAt: string | null
+          userId: string
+          mealType: string
+          mealDate: string
+        }
+        Insert: {
+          id?: string
+          createdAt?: string | null
+          userId: string
+          mealType: string
+          mealDate: string
+        }
+        Update: {
+          id?: string
+          createdAt?: string | null
+          userId?: string
+          mealType?: string
+          mealDate?: string
+        }
+      }
       users: {
         Row: {
-          id: string;
-          createdAt: string;
-          name: string;
-          profileImageUrl: string | null;
-          type: string;
-          userId: string;
-        };
+          createdAt: string
+          name: string | null
+          profileImageUrl: string | null
+          type: string
+          id: string
+        }
         Insert: {
-          id?: string;
-          createdAt?: string;
-          name: string;
-          profileImageUrl?: string | null;
-          type: string;
-          userId: string;
-        };
+          createdAt?: string
+          name?: string | null
+          profileImageUrl?: string | null
+          type: string
+          id: string
+        }
         Update: {
-          id?: string;
-          createdAt?: string;
-          name?: string;
-          profileImageUrl?: string | null;
-          type?: string;
-          userId?: string;
-        };
-      };
-    };
+          createdAt?: string
+          name?: string | null
+          profileImageUrl?: string | null
+          type?: string
+          id?: string
+        }
+      }
+    }
     Views: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     Functions: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     Enums: {
-      [_ in never]: never;
-    };
-  };
+      [_ in never]: never
+    }
+  }
 }

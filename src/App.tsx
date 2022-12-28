@@ -30,8 +30,6 @@ function App() {
       const authRes = await supabase.auth.getSession();
       const userRes = await supabase.auth.getUser();
 
-      console.log(authRes, userRes);
-
       if (!authRes.data.session || authRes.error || !userRes.data) {
         const requstedRoute = router.state.location.pathname;
         if (allowedRoutes.includes(requstedRoute)) {
@@ -41,11 +39,6 @@ function App() {
         }
         return;
       }
-
-      const user = await supabase
-        .from("users")
-        .select("*")
-        .filter("userId", "eq", userRes.data.user?.id);
 
       auth.setAuth(authRes.data.session, userRes.data.user);
       router.navigate("/home");

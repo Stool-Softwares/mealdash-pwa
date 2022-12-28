@@ -37,7 +37,6 @@ export function Register() {
       ...form,
       options: { data: { type: "HOS" } },
     });
-    console.log({ data, error });
 
     if (!data.session && data.user) {
       navigate("/verify-email");
