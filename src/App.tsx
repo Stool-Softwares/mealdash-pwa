@@ -43,7 +43,7 @@ function App() {
       }
 
       auth.setAuth(authRes.data.session, userRes.data.user);
-      // router.navigate("/home");
+      router.navigate("/home");
     } catch (error) {
       console.log(error);
 
