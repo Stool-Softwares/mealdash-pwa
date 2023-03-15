@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Header } from "../components/Header";
 import { useUser } from "../hooks/useUser";
 import supabase from "../supabase";
@@ -35,8 +36,22 @@ async function fetchTodaysMeals() {
   const mealsRes = await supabase
     .from("meals")
     .select()
-    .gte("mealDate", "2022-12-25")
-    .lte("mealDate", "2022-12-26");
+    .gte(
+      "mealDate",
+      new Date(new Date().toDateString())
+        .toLocaleDateString()
+        .split("/")
+        .reverse()
+        .join("-")
+    )
+    .lte(
+      "mealDate",
+      new Date(tomorrow().toDateString())
+        .toLocaleDateString()
+        .split("/")
+        .reverse()
+        .join("-")
+    );
 
   return mealsRes;
 }
@@ -72,13 +87,30 @@ async function toggleMealStatus(
   }
 }
 
+const tomorrow = () =>
+  new Date(new Date(new Date().toDateString()).getTime() + 24 * 60 * 60 * 1000);
+
 async function getUserMealStatus(userId: string) {
   const mealStatus = await supabase
     .from("mealsStatus")
     .select("*")
     .eq("userId", userId)
-    .gte("mealDate", "2022-12-25")
-    .lte("mealDate", "2022-12-26");
+    .gte(
+      "mealDate",
+      new Date(new Date().toDateString())
+        .toLocaleDateString()
+        .split("/")
+        .reverse()
+        .join("-")
+    )
+    .lte(
+      "mealDate",
+      new Date(tomorrow().toDateString())
+        .toLocaleDateString()
+        .split("/")
+        .reverse()
+        .join("-")
+    );
 
   return mealStatus.data || [];
 }
@@ -86,6 +118,7 @@ async function getUserMealStatus(userId: string) {
 export function Home() {
   const [meals, setMeals] = useState<Array<MealWithStatus>>([]);
   const user = useUser();
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function getMeals() {
@@ -93,9 +126,6 @@ export function Home() {
       const mealsRes = await fetchTodaysMeals();
       const mealStatus = await getUserMealStatus(user.id);
       const stateVariant = convertToState(mealsRes.data || [], mealStatus);
-
-      console.log("exec");
-
       setMeals(stateVariant);
     }
 
@@ -107,8 +137,7 @@ export function Home() {
   return (
     <VStack className="px-5 py-5">
       <Header />
-
-      <VStack className="mb-5">
+      <VStack className="mb-5" onClick={() => navigate("/provider")}>
         <h1 className="font-bold">Your Meals</h1>
       </VStack>
       <VStack>
@@ -144,7 +173,7 @@ export function Home() {
                 }
               }}
             >
-              {item.isAttending ? "Cancel Meal" : "Attend Meal"}
+              {!item.isAttending ? "Cancel Meal" : "Attend Meal"}
             </Button>
           </div>
         ))}

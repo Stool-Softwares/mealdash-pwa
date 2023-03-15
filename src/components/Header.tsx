@@ -5,7 +5,7 @@ import { VStack } from "../ui/VStack";
 export function Header() {
   const navigate = useNavigate();
   return (
-    <HStack className="justify-between mb-5">
+    <HStack className="justify-between mb-5 w-full">
       <VStack>
         <h1 className="font-bold">Hi, Aditya</h1>
         <p className="text-sm">you have saved 4 meals so far</p>

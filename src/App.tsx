@@ -5,6 +5,7 @@ import { Home } from "./screens/Home";
 import { Loading } from "./screens/Loading";
 import { Login } from "./screens/Login";
 import { Profile } from "./screens/Profile";
+import { Provider } from "./screens/provider";
 import { Register } from "./screens/Register";
 import { VerifyEmail } from "./screens/VerifyEmail";
 import { useStore } from "./store";
@@ -18,9 +19,10 @@ const router = createBrowserRouter([
   { path: "/profile", element: <Profile /> },
   { path: "/verify-email", element: <VerifyEmail /> },
   { path: "/create-user", element: <CreateUser /> },
+  { path: "/provider", element: <Provider /> },
 ]);
 
-const allowedRoutes = ["/login", "/register"];
+const allowedRoutes = ["/login", "/register", "/provider"];
 
 function App() {
   const { auth } = useStore((s) => ({ auth: s.auth }));
@@ -41,7 +43,7 @@ function App() {
       }
 
       auth.setAuth(authRes.data.session, userRes.data.user);
-      router.navigate("/home");
+      // router.navigate("/home");
     } catch (error) {
       console.log(error);
 

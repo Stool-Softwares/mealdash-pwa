@@ -1,28 +1,36 @@
 import { useState } from "react";
 import supabase from "../supabase";
-import { UserType } from "../types";
 import { Button } from "../ui/Button";
 import { Center } from "../ui/Center";
 import { Input } from "../ui/Input";
 import { VStack } from "../ui/VStack";
-import fp from "lodash";
 import { useNavigate } from "react-router-dom";
+import z from "zod";
 
-// JAN 1 COMMIT
+const UserType = z.enum(["HOS", "DAS"]);
+
+const registerFormSchema = z.object({
+  email: z.string().email({ message: "Invalid e-mail address" }),
+  password: z.string().min(5).max(18),
+  name: z.string().min(2),
+  type: UserType,
+});
+
 interface RegisterForm {
   email: string;
   password: string;
   name: string;
-  type: UserType;
+  type: z.infer<typeof UserType>;
 }
 
 export function Register() {
   const navigate = useNavigate();
+
   const [form, setForm] = useState<RegisterForm>({
     email: "",
     password: "",
     name: "",
-    type: UserType.STUDENT,
+    type: UserType.enum.HOS,
   });
 
   function onChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -32,11 +40,19 @@ export function Register() {
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log({ form });
 
+    const detailsAreValid = registerFormSchema.safeParse(form);
+
+    if (!detailsAreValid.success) {
+      // show a failure toast
+      const errorMessage = detailsAreValid.error.message;
+      return;
+    }
+
+    // sign in call
     const { data, error } = await supabase.auth.signUp({
       ...form,
-      options: { data: { type: "HOS" } },
+      options: { data: { type: form.type } },
     });
 
     if (!data.session && data.user) {
