@@ -144,7 +144,6 @@ export function Home() {
       <VStack className="mb-5" onClick={() => navigate("/provider")}>
         <h1 className="font-bold">Your Meals</h1>
       </VStack>
-      {JSON.stringify(meals)}
       <VStack>
         {meals.map((item, i) => (
           <div
