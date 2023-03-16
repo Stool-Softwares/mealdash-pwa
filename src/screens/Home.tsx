@@ -38,19 +38,21 @@ async function fetchTodaysMeals() {
     .select()
     .gte(
       "mealDate",
-      new Date(new Date().toDateString())
+      "2023-03-16"
+      /*new Date(new Date().toDateString())
         .toLocaleDateString()
         .split("/")
         .reverse()
-        .join("-")
+        .join("-") */
     )
     .lte(
       "mealDate",
-      new Date(tomorrow().toDateString())
+      "2023-03-17"
+      /*new Date(tomorrow().toDateString())
         .toLocaleDateString()
         .split("/")
         .reverse()
-        .join("-")
+        .join("-")*/
     );
 
   return mealsRes;
@@ -97,19 +99,21 @@ async function getUserMealStatus(userId: string) {
     .eq("userId", userId)
     .gte(
       "mealDate",
-      new Date(new Date().toDateString())
+      "2023-03-16"
+      /* new Date(new Date().toDateString())
         .toLocaleDateString()
         .split("/")
         .reverse()
-        .join("-")
+        .join("-") */
     )
     .lte(
       "mealDate",
-      new Date(tomorrow().toDateString())
+      "2023-03-17"
+      /*new Date(tomorrow().toDateString())
         .toLocaleDateString()
         .split("/")
         .reverse()
-        .join("-")
+        .join("-") */
     );
 
   return mealStatus.data || [];
