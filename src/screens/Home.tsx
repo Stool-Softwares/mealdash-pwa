@@ -121,9 +121,22 @@ async function getUserMealStatus(userId: string) {
 
 export function Home() {
   const [meals, setMeals] = useState<Array<MealWithStatus>>([]);
+  const [savedMeals, setSavedMeals] = useState(0);
   const user = useUser();
   const navigate = useNavigate();
 
+  const getTime = (mealType: string) => {
+    switch (mealType) {
+      case "BRE":
+        return "8:00AM - 9:00AM";
+      case "LUN":
+        return "12:00PM - 2:00PM";
+      case "SNA":
+        return "4:00PM - 5:00PM";
+      case "DIN":
+        return "8:00PM - 10:00PM";
+    }
+  };
   useEffect(() => {
     async function getMeals() {
       if (!user) return;
@@ -136,11 +149,25 @@ export function Home() {
     getMeals();
   }, [user]);
 
-  if (!user) return null;
+  const userMeals = async () => {
+    const meals = await supabase
+      .from("mealsStatus")
+      .select("*")
+      .eq("userId", user?.id);
 
+    setSavedMeals(meals.data?.length || 0);
+  };
+
+  useEffect(() => {
+    if (user?.id) {
+      userMeals();
+    }
+  }, [meals]);
+
+  if (!user) return null;
   return (
     <VStack className="px-5 py-5">
-      <Header />
+      <Header savedMeals={savedMeals} />
       <VStack className="mb-5" onClick={() => navigate("/provider")}>
         <h1 className="font-bold">Your Meals</h1>
       </VStack>
@@ -152,7 +179,7 @@ export function Home() {
           >
             <h1 className="text-sm font-bold">{item.mealType}</h1>
             <p className="text-sm">{item.mealContent}</p>
-            <p className="text-sm">Time: 1:00PM - 3:00PM</p>
+            <p className="text-sm">{getTime(item.mealType)}</p>
             <Button
               className="w-full mt-3"
               onClick={async () => {
