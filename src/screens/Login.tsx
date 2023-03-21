@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import supabase from "../supabase";
 import { Button } from "../ui/Button";
 import { Center } from "../ui/Center";
@@ -28,13 +29,12 @@ export function Login() {
       ...form,
       options: { data: { type: "HOS" } },
     });
-    console.log({ login: "login", data, error });
 
-    // if (data.session?.access_token) {
-    //   navigate("/home");
-    // } else {
-    //   console.log("Unable to login");
-    // }
+    if (data.session?.access_token) {
+      navigate("/home");
+    } else {
+      toast("Unable to login", { type: "error", hideProgressBar: true });
+    }
   }
 
   return (

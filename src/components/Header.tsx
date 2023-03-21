@@ -1,14 +1,16 @@
 import { useNavigate } from "react-router-dom";
+import { useSession } from "../hooks/useSession";
 import { HStack } from "../ui/HStack";
 import { VStack } from "../ui/VStack";
 
 export function Header(props: { savedMeals: number }) {
   const navigate = useNavigate();
+  const sesh = useSession();
 
   return (
     <HStack className="justify-between mb-5 w-full">
       <VStack>
-        <h1 className="font-bold">Hi, {"Namish"}</h1>
+        <h1 className="font-bold">Hi, {sesh?.user.user_metadata.name}</h1>
         {props.savedMeals === -1 ? null : (
           <p className="text-sm">
             you have saved {`${props.savedMeals}`} meals so far

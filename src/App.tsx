@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { CreateUser } from "./screens/CreateUser";
 import { Home } from "./screens/Home";
 import { Loading } from "./screens/Loading";
@@ -43,7 +45,7 @@ function App() {
       }
 
       auth.setAuth(authRes.data.session, userRes.data.user);
-      router.navigate("/home");
+      // router.navigate("/home");
     } catch (error) {
       console.log(error);
 
@@ -71,6 +73,11 @@ function App() {
   return (
     <div className="h-full">
       <RouterProvider router={router} />
+      <ToastContainer
+        position={"top-center"}
+        bodyClassName="bg-zinc-300"
+        toastClassName="bg-zinc-300"
+      />
     </div>
   );
 }

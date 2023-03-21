@@ -1,11 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import z from "zod";
 import supabase from "../supabase";
 import { Button } from "../ui/Button";
 import { Center } from "../ui/Center";
 import { Input } from "../ui/Input";
 import { VStack } from "../ui/VStack";
-import { useNavigate } from "react-router-dom";
-import z from "zod";
 
 const UserType = z.enum(["HOS", "DAS"]);
 
@@ -52,7 +52,7 @@ export function Register() {
     // sign in call
     const { data, error } = await supabase.auth.signUp({
       ...form,
-      options: { data: { type: form.type } },
+      options: { data: { type: form.type, name: "aditya" } },
     });
 
     if (!data.session && data.user) {
