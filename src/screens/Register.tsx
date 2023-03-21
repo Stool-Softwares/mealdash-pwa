@@ -4,6 +4,7 @@ import z from "zod";
 import supabase from "../supabase";
 import { Button } from "../ui/Button";
 import { Center } from "../ui/Center";
+import { Dropdown } from "../ui/Dropdown";
 import { Input } from "../ui/Input";
 import { VStack } from "../ui/VStack";
 
@@ -34,6 +35,10 @@ export function Register() {
   });
 
   function onChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  }
+  function onChangeDropdown(e: React.ChangeEvent<HTMLSelectElement>) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   }
@@ -96,13 +101,14 @@ export function Register() {
                 name="password"
                 onChange={onChange}
               />
-              <Input
+              <Dropdown
                 className="w-72"
                 type="text"
                 placeholder="Type"
                 value={form.type}
                 name="type"
-                onChange={onChange}
+                onChange={onChangeDropdown}
+                options={["HOS", "DAS"]}
               />
             </VStack>
 
