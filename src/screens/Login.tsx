@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import supabase from "../supabase";
+import { getUser, login } from "../apis";
+import { useToast } from "../hooks/useToast";
+import { useUser } from "../hooks/useUser";
 import { Button } from "../ui/Button";
 import { Center } from "../ui/Center";
 import { Input } from "../ui/Input";
@@ -13,7 +15,9 @@ interface LoginForm {
 
 export function Login() {
   const [form, setForm] = useState<LoginForm>({ email: "", password: "" });
+  const toast = useToast();
   const navigate = useNavigate();
+  const user = useUser();
 
   function onChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
@@ -22,27 +26,35 @@ export function Login() {
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log({ form });
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      ...form,
-      options: { data: { type: "HOS" } },
-    });
-    console.log({ login: "login", data, error });
+    const { data, error } = await login(form.email, form.password);
 
-    // if (data.session?.access_token) {
-    //   navigate("/home");
-    // } else {
-    //   console.log("Unable to login");
-    // }
+    if (!!error) {
+      toast(error);
+    }
+
+    // load user into local state
+    await getUser();
+
+    if (data.token) {
+      navigate("/home", { replace: true });
+    }
   }
+
+  useEffect(() => {
+    console.log({ user });
+
+    if (user) {
+      navigate("/home", { replace: true });
+    }
+  }, []);
 
   return (
     <Center className="h-full">
       <div>
         <VStack className="items-center">
           <div className="text-center mb-5">
-            <h1 className="text-lg font-bold">MealDash</h1>
+            <h1 className="text-xl font-bold text-green-700">MealDash</h1>
             <p>Login</p>
           </div>
 

@@ -1,13 +1,15 @@
-import { useState } from "react";
-import supabase from "../supabase";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import z from "zod";
+import { register } from "../apis";
+import { useToast } from "../hooks/useToast";
+import { useUser } from "../hooks/useUser";
 import { Button } from "../ui/Button";
 import { Center } from "../ui/Center";
 import { Input } from "../ui/Input";
 import { VStack } from "../ui/VStack";
-import { useNavigate } from "react-router-dom";
-import z from "zod";
 
-const UserType = z.enum(["HOS", "DAS"]);
+const UserType = z.enum(["HOSTLER", "DAYSCHOLAR"]);
 
 const registerFormSchema = z.object({
   email: z.string().email({ message: "Invalid e-mail address" }),
@@ -25,12 +27,14 @@ interface RegisterForm {
 
 export function Register() {
   const navigate = useNavigate();
+  const toast = useToast();
+  const user = useUser();
 
   const [form, setForm] = useState<RegisterForm>({
     email: "",
     password: "",
     name: "",
-    type: UserType.enum.HOS,
+    type: UserType.enum.HOSTLER,
   });
 
   function onChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -49,16 +53,22 @@ export function Register() {
       return;
     }
 
-    // sign in call
-    const { data, error } = await supabase.auth.signUp({
-      ...form,
-      options: { data: { type: form.type } },
-    });
+    const { data, error } = await register(form);
 
-    if (!data.session && data.user) {
-      navigate("/verify-email");
+    if (!!error) {
+      toast(error);
+    }
+
+    if (data.token) {
+      navigate("/home");
     }
   }
+
+  useEffect(() => {
+    if (user) {
+      navigate("/home", { replace: true });
+    }
+  }, []);
 
   return (
     <Center className="h-full">

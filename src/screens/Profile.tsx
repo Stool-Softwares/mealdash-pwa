@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
+import { logout } from "../apis";
 import { useUser } from "../hooks/useUser";
-import supabase from "../supabase";
 import { Button } from "../ui/Button";
 import { Flex } from "../ui/Flex";
 import { HStack } from "../ui/HStack";
@@ -8,17 +8,6 @@ import { HStack } from "../ui/HStack";
 export function Profile() {
   const navigate = useNavigate();
   const user = useUser();
-
-  async function logout() {
-    try {
-      const res = await supabase.auth.signOut();
-      if (!res.error) {
-        navigate("/login");
-      }
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  }
 
   return (
     <Flex className="flex-col items-center p-5 relative h-full">
@@ -34,7 +23,10 @@ export function Profile() {
         <div className="w-screen px-5">
           <button
             className="border border-red-400 w-full text-red-500 rounded-md py-2"
-            onClick={logout}
+            onClick={() => {
+              logout();
+              navigate("/");
+            }}
           >
             Logout
           </button>

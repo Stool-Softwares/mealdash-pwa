@@ -10,7 +10,7 @@ export function Button(props: PropsWithChildren<ButtonProps>) {
   return (
     <button
       {...rest}
-      className={`bg-zinc-700 rounded-md px-2 py-1 border border-zinc-500 outline-none focus:outline-zinc-300 ${className}`}
+      className={`bg-green-600 text-white rounded-md px-2 py-1 border border-zinc-500 outline-none focus:outline-zinc-300 ${className}`}
     >
       {props.children}
     </button>

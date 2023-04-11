@@ -1,5 +1,6 @@
-import { useEffect } from "react";
+import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Toast } from "./components/Toast";
 import { CreateUser } from "./screens/CreateUser";
 import { Home } from "./screens/Home";
 import { Loading } from "./screens/Loading";
@@ -8,8 +9,6 @@ import { Profile } from "./screens/Profile";
 import { Provider } from "./screens/provider";
 import { Register } from "./screens/Register";
 import { VerifyEmail } from "./screens/VerifyEmail";
-import { useStore } from "./store";
-import supabase from "./supabase";
 
 const router = createBrowserRouter([
   { path: "/", element: <Loading /> },
@@ -22,55 +21,48 @@ const router = createBrowserRouter([
   { path: "/provider", element: <Provider /> },
 ]);
 
-const allowedRoutes = ["/login", "/register", "/provider"];
+interface ToastProviderContext {
+  trueFn: (msg: string) => void;
+}
 
-function App() {
-  const { auth } = useStore((s) => ({ auth: s.auth }));
+export const ToastContext = createContext<ToastProviderContext | null>(null);
 
-  async function authenticate() {
-    try {
-      const authRes = await supabase.auth.getSession();
-      const userRes = await supabase.auth.getUser();
+const ToastProvider: React.FC<PropsWithChildren<{}>> = (props) => {
+  const [open, setOpen] = useState<boolean>(false);
+  const [toastMsg, setToastMsg] = useState<string>("");
+  const [loaded, setLoaded] = useState(false);
 
-      if (!authRes.data.session || authRes.error || !userRes.data) {
-        const requstedRoute = router.state.location.pathname;
-        if (allowedRoutes.includes(requstedRoute)) {
-          router.navigate(requstedRoute);
-        } else {
-          router.navigate("/login");
-        }
-        return;
-      }
-
-      auth.setAuth(authRes.data.session, userRes.data.user);
-      router.navigate("/home");
-    } catch (error) {
-      console.log(error);
-
-      const requstedRoute = router.state.location.pathname;
-      if (allowedRoutes.includes(requstedRoute)) {
-        router.navigate(requstedRoute);
-      } else {
-        router.navigate("/login");
-      }
-    }
+  function trueFn(msg: string) {
+    setOpen(true);
+    setToastMsg(msg);
   }
 
   useEffect(() => {
-    authenticate();
-    supabase.auth.onAuthStateChange(async (_, session) => {
-      const user = await supabase.auth.getUser();
-      auth.setAuth(session, user.data.user);
-      if (!session) {
-        router.navigate("/login");
-      } else {
-        router.navigate("/home");
-      }
-    });
+    setLoaded(true);
   }, []);
+
+  useEffect(() => {
+    if (open) {
+      setTimeout(() => {
+        setOpen(false);
+      }, 4000);
+    }
+  }, [open]);
+
+  return (
+    <ToastContext.Provider value={{ trueFn }}>
+      {props.children}
+      {loaded && <Toast open={open} message={toastMsg} />}
+    </ToastContext.Provider>
+  );
+};
+
+function App() {
   return (
     <div className="h-full">
-      <RouterProvider router={router} />
+      <ToastProvider>
+        <RouterProvider router={router} />
+      </ToastProvider>
     </div>
   );
 }

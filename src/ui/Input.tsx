@@ -5,7 +5,7 @@ export function Input(props: InputProps) {
     <div>
       <input
         {...props}
-        className={`bg-zinc-700 rounded-md px-2 py-1 border border-zinc-500 ${props.className} outline-none focus:outline-zinc-300`}
+        className={`bg-zinc-200 rounded-md px-2 py-1 border border-zinc-500 ${props.className} outline-none focus:outline-zinc-300`}
       />
     </div>
   );

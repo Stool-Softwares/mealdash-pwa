@@ -1,8 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSession } from "../hooks/useSession";
-import { useStore } from "../store";
-import supabase from "../supabase";
+import { getUser } from "../apis";
 import { Center } from "../ui/Center";
 import { VStack } from "../ui/VStack";
 
@@ -11,7 +9,7 @@ export function Spinner() {
     <div role="status">
       <svg
         aria-hidden="true"
-        className="mr-2 w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-zinc-100"
+        className="mr-2 w-8 h-8 animate-spin text-green-600 fill-zinc-100"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -31,11 +29,34 @@ export function Spinner() {
 }
 
 export function Loading() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function exec() {
+      const { data, error } = await getUser();
+
+      console.log({ data, error });
+
+      if (!!error) {
+        // handle error
+        navigate("/login", { replace: true });
+      }
+
+      if (data) {
+        navigate("/home");
+      }
+    }
+
+    exec().catch((e) => {
+      console.log(e);
+    });
+  }, []);
+
   return (
     <Center className="h-full">
       <VStack className="items-center">
         <Spinner />
-        <p className="mt-3 text-zinc-400">A Meal's has been cooking!</p>
+        <p className="mt-3 text-zinc-600">A Meal's has been cooking!</p>
       </VStack>
     </Center>
   );
