@@ -10,7 +10,7 @@ function Provider() {
       </div>
 
       <div className="my-2 border w-full py-4 rounded-md flex items-center justify-center flex-col">
-        Register a user
+        Add Menu
       </div>
     </div>
   );

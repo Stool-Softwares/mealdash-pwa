@@ -15,6 +15,18 @@ export function Home() {
   const { meals, loading, toggleMeal } = useMeals();
   console.log(user, meals);
 
+  const getTime = (mealType: string) => {
+    switch (mealType) {
+      case "BRE":
+        return "8:00AM - 9:00AM";
+      case "LUN":
+        return "12:00PM - 2:00PM";
+      case "SNA":
+        return "4:00PM - 5:00PM";
+      case "DIN":
+        return "8:00PM - 10:00PM";
+    }
+  };
   useEffect(() => {
     getUser();
   }, []);
@@ -24,6 +36,7 @@ export function Home() {
     return { meal: meals[key], status: meals[`${key}Status` as const] };
   }
 
+  if (!user) return null;
   return (
     <Flex className="px-5 py-5 home-bg h-full flex-col justify-start">
       <Header />
