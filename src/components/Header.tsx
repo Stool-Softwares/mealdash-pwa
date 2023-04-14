@@ -20,10 +20,7 @@ export function Header() {
         onClick={() => navigate("/profile")}
         className="bg-gray-200 rounded-full w-10 h-10 flex items-center justify-center overflow-hidden"
       >
-        <img
-          src="https://robohash.org/mail@ashallendesign.co.uk"
-          alt="avatar"
-        />
+        {/* <img src="" alt="avatar" /> */}
       </div>
     </HStack>
   );

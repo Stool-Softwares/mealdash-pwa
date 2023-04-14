@@ -19,6 +19,12 @@ export function Profile() {
 
       <Button>Edit Profile</Button>
 
+      <Flex className="w-full my-5">
+        <div className="border border-green-500 w-full px-3 py-2 rounded-md mb-2">
+          <button>View Complete Menu</button>
+        </div>
+      </Flex>
+
       <HStack className="absolute bottom-5">
         <div className="w-screen px-5">
           <button
