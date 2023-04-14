@@ -6,24 +6,19 @@ import { useToast } from "../hooks/useToast";
 import { useUser } from "../hooks/useUser";
 import { Button } from "../ui/Button";
 import { Center } from "../ui/Center";
-import { Dropdown } from "../ui/Dropdown";
 import { Input } from "../ui/Input";
 import { VStack } from "../ui/VStack";
-
-const UserType = z.enum(["HOSTLER", "DAYSCHOLAR"]);
 
 const registerFormSchema = z.object({
   email: z.string().email({ message: "Invalid e-mail address" }),
   password: z.string().min(5).max(18),
   name: z.string().min(2),
-  type: UserType,
 });
 
 interface RegisterForm {
   email: string;
   password: string;
   name: string;
-  type: z.infer<typeof UserType>;
 }
 
 export function Register() {
@@ -35,14 +30,9 @@ export function Register() {
     email: "",
     password: "",
     name: "",
-    type: UserType.enum.HOSTLER,
   });
 
   function onChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  }
-  function onChangeDropdown(e: React.ChangeEvent<HTMLSelectElement>) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   }
@@ -55,6 +45,7 @@ export function Register() {
     if (!detailsAreValid.success) {
       // show a failure toast
       const errorMessage = detailsAreValid.error.message;
+      toast(errorMessage);
       return;
     }
 
@@ -110,15 +101,6 @@ export function Register() {
                 value={form.password}
                 name="password"
                 onChange={onChange}
-              />
-              <Dropdown
-                className="w-72"
-                type="text"
-                placeholder="Type"
-                value={form.type}
-                name="type"
-                onChange={onChangeDropdown}
-                options={["HOS", "DAS"]}
               />
             </VStack>
 

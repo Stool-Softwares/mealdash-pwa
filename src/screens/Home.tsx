@@ -2,70 +2,73 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUser } from "../apis";
 import { Header } from "../components/Header";
-import { useMeals } from "../hooks/useMeals";
+import { useEstimatedCount } from "../hooks/useEstimatedCount";
 import { useUser } from "../hooks/useUser";
-import { MealType, Meals } from "../types";
-import { Button } from "../ui/Button";
+import { MealType } from "../types";
 import { Flex } from "../ui/Flex";
-import { VStack } from "../ui/VStack";
+import { Spinner } from "./Loading";
+
+function getCurrentMealType(): MealType {
+  const hour = new Date().getHours();
+  if (hour >= 0 && hour <= 8) {
+    return "BREAKFAST";
+  } else if (hour >= 9 && hour <= 12) {
+    return "LUNCH";
+  } else if (hour >= 17 && hour <= 18) {
+    return "SNACKS";
+  } else {
+    return "DINNER";
+  }
+}
 
 export function Home() {
   const navigate = useNavigate();
   const user = useUser();
-  const { meals, loading, toggleMeal } = useMeals();
-  console.log(user, meals);
+  const { count, total, loading } = useEstimatedCount();
 
-  const getTime = (mealType: string) => {
-    switch (mealType) {
-      case "BRE":
-        return "8:00AM - 9:00AM";
-      case "LUN":
-        return "12:00PM - 2:00PM";
-      case "SNA":
-        return "4:00PM - 5:00PM";
-      case "DIN":
-        return "8:00PM - 10:00PM";
-    }
-  };
+  console.log(count, loading);
+
   useEffect(() => {
     getUser();
   }, []);
 
-  function getMealData(m: MealType) {
-    const key = m.toLocaleLowerCase() as Lowercase<MealType>;
-    return { meal: meals[key], status: meals[`${key}Status` as const] };
+  if (!user) {
+    // navigate("/login");
   }
 
-  if (!user) return null;
   return (
-    <Flex className="px-5 py-5 home-bg h-full flex-col justify-start">
+    <Flex className="px-5 py-5 home-bg h-full flex-col justify-start relative">
       <Header />
-      <VStack className="mb-5" onClick={() => navigate("/provider")}>
-        <h1 className="font-bold">Your Meals</h1>
-      </VStack>
-      {loading && <p>Loading...</p>}
-      {!loading && (
-        <VStack>
-          {Meals.map((m, i) => (
-            <div
-              key={i}
-              className="w-full border border-zinc-400 rounded-md px-3 py-3 mb-5"
-            >
-              <h1 className="text-sm font-bold">{m}</h1>
-              <p className="text-sm">{getMealData(m).meal}</p>
-              <p className="text-sm">Time: 1:00PM - 3:00PM</p>
-              <Button
-                className="w-full mt-3"
-                onClick={async () => {
-                  await toggleMeal(m);
-                }}
-              >
-                {getMealData(m).status ? "Cancel Meal" : "Attend Meal"}
-              </Button>
-            </div>
-          ))}
-        </VStack>
+
+      {loading && (
+        <div className="w-full flex justify-center mb-5">
+          <Spinner />
+        </div>
       )}
+
+      <div className="border border-green-600 w-full py-5 rounded-md flex flex-col items-start justify-center mb-5">
+        <p className="px-5">Estimated User Count: {getCurrentMealType()}</p>
+        <p className="font-bold text-6xl text-green-700 m-auto my-3">
+          {count}/{total}
+        </p>
+      </div>
+
+      <div className="border border-green-600 w-full py-5 rounded-md flex flex-col items-start justify-center mb-5">
+        <p className="px-5">Last week's Performance</p>
+        <div className="m-auto">"""A GRAPH GOES HERE"""</div>
+      </div>
+
+      <div
+        className="w-full left-1/2 absolute bottom-5 px-5"
+        style={{ transform: "translateX(-50%)" }}
+      >
+        <button
+          className="w-full font-bold rounded-md border border-green-600 bg-green-700 text-white py-2"
+          onClick={() => navigate("/create-menu")}
+        >
+          Create Menu
+        </button>
+      </div>
     </Flex>
   );
 }

@@ -36,6 +36,8 @@ export function Login() {
     // load user into local state
     await getUser();
 
+    console.log({ data, user }, "logged in");
+
     if (data.token) {
       navigate("/home", { replace: true });
     }

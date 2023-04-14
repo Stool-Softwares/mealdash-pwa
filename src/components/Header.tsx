@@ -13,7 +13,9 @@ export function Header() {
     <HStack className="justify-between mb-5 w-full">
       <VStack>
         <h1 className="font-bold">Hi, {user && user.name}</h1>
-        <p className="text-sm">you have saved 4 meals so far</p>
+        <p className="text-sm text-white bg-zinc-500 px-2 py-0.5 rounded-md">
+          Mess Manager
+        </p>
       </VStack>
 
       <div

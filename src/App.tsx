@@ -1,14 +1,18 @@
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { io } from "socket.io-client";
 import { Toast } from "./components/Toast";
-import { CreateUser } from "./screens/CreateUser";
+import { CreateMenu } from "./screens/CreateMenu";
 import { Home } from "./screens/Home";
 import { Loading } from "./screens/Loading";
 import { Login } from "./screens/Login";
 import { Profile } from "./screens/Profile";
 import { Provider } from "./screens/provider";
 import { Register } from "./screens/Register";
-import { VerifyEmail } from "./screens/VerifyEmail";
+
+export const socket = io("ws://localhost:5001", {
+  reconnectionDelayMax: 10000,
+});
 
 const router = createBrowserRouter([
   { path: "/", element: <Loading /> },
@@ -16,8 +20,7 @@ const router = createBrowserRouter([
   { path: "/register", element: <Register /> },
   { path: "/home", element: <Home /> },
   { path: "/profile", element: <Profile /> },
-  { path: "/verify-email", element: <VerifyEmail /> },
-  { path: "/create-user", element: <CreateUser /> },
+  { path: "/create-menu", element: <CreateMenu /> },
   { path: "/provider", element: <Provider /> },
 ]);
 

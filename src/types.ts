@@ -1,10 +1,7 @@
-export type ConsumerType = "HOSTLER" | "DAYSCHOLAR";
-
-export type RegisterConsumerInput = {
+export type RegisterProviderInput = {
   name: string;
   email: string;
   password: string;
-  type: ConsumerType;
 };
 
 export type Meal = {
@@ -22,5 +19,14 @@ export type Meal = {
   dinnerStatus: boolean;
 };
 
+export type Menu = Pick<
+  Meal,
+  "breakfast" | "lunch" | "snacks" | "dinner" | "date"
+>;
+
 export const Meals = ["BREAKFAST", "LUNCH", "SNACKS", "DINNER"] as const;
 export type MealType = typeof Meals[number];
+
+export const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"] as const;
+export type Day = typeof DAYS[number];
+export type WeekMenu = Record<Day, Menu>;
